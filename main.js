@@ -7,7 +7,6 @@ function doPost(e) {
     let json = data.events[0]
     let replyToken = json.replyToken
     let userMessage = json.message.text
-    let userId = json.source.userId
 
     // 返信メッセージを作る
     let replyMessage = userMessage
