@@ -14,14 +14,27 @@ function doPost(e) {
     // メッセージを解析
     let command = userMessage.split("\n")[0]
     let todo = userMessage.split("\n")[1]
+    let todoList = []
 
     // タスクを追加する
     if (command === "追加") {
       sheet.appendRow([todo])
+    } else if (command === "一覧") {
+        let rows = sheet.getDataRange().getValues();
+        for (row of rows) {
+          todoList.push(row[0])
+      }
     }
 
     // 返信メッセージを作る
-    let replyMessage = userMessage
+    let replyMessage = ""
+    if (command === "追加") {
+        replyMessage = "追加しました: " + todo
+    } else if (command === "一覧") {
+        for (t of todoList) {
+          replyMessage += t + "\n"
+        }
+    }
 
     // 返信処理を行う
     UrlFetchApp.fetch(lineReplyUrl, {
