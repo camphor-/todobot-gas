@@ -16,14 +16,24 @@ function doPost(e) {
     let todo = userMessage.split("\n")[1]
     let todoList = []
 
-    // タスクを追加する
+    // 命令を実行する
     if (command === "追加") {
       sheet.appendRow([todo])
     } else if (command === "一覧") {
         let rows = sheet.getDataRange().getValues();
         for (row of rows) {
           todoList.push(row[0])
-      }
+        }
+    } else if (command === "削除") {
+        let rows = sheet.getDataRange().getValues();
+        for (row of rows) {
+          if (row[0] === todo) {
+            todoList.push([""])
+          } else {
+            todoList.push([row[0]])
+          }
+        }
+        sheet.getDataRange().setValues(todoList)
     }
 
     // 返信メッセージを作る
@@ -32,8 +42,12 @@ function doPost(e) {
         replyMessage = "追加しました: " + todo
     } else if (command === "一覧") {
         for (t of todoList) {
-          replyMessage += t + "\n"
+          if (t !== "") {
+              replyMessage += t + "\n"
+          }
         }
+    } else if (command === "削除") {
+      replyMessage = "削除しました: " + todo
     }
 
     // 返信処理を行う
